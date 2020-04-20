@@ -4,12 +4,17 @@ class Menu extends Phaser.Scene {
     }
 
     preload(){
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
-        this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.audio('sfx_select', './modassets/pop.wav');
+        this.load.audio('sfx_explosion', './modassets/kaching.wav');
+        this.load.audio('sfx_rocket', './modassets/bell.wav');
+
+        this.load.image('bg', './modassets/mainbg.png');
     }
 
     create(){
+
+        this.bg = this.add.tileSprite(0, 0, 640, 480, 'bg').setOrigin(0,0);
+
         //menu screen 
         let menuConfig = {
             fontFamily: 'Courier',
@@ -20,18 +25,6 @@ class Menu extends Phaser.Scene {
             padding: {top: 5, bottom: 5,},
             fixedWidth: 0
         }
-
-        let centerX = game.config.width/2;
-        let centerY = game.config.height/2;
-        let textSpacer = 64;
-
-        this.add.text(centerX, centerY - textSpacer, ' ROCKET PATROL ', menuConfig).setOrigin (0.5);
-
-        menuConfig.backgroundColor = "#E4E7E9";
-        menuConfig.color = "#000";  
-
-        this.add.text(centerX, centerY, ' PRESS (A) FOR 2 PLAYER MODE ', menuConfig).setOrigin (0.5);       
-        this.add.text(centerX, centerY + textSpacer, ' or PRESS (F) for SINGLE PLAYER MODE ', menuConfig).setOrigin (0.5);
 
         //define play mode/level difficulty keys
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);

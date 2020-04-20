@@ -6,26 +6,21 @@ class Play extends Phaser.Scene {
 
     preload(){
         //load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.image('rocket', './modassets/burger1.png');
+        this.load.image('spaceship', './modassets/eater.png');
+        this.load.image('starfield', './modassets/floorplan.png');
+        this.load.image('end1', './modassets/endbg.png');
+        this.load.spritesheet('explosion', './modassets/eating.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 18});
     }
 
     create(){
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
 
-        //white rectangle border
-        this.add.rectangle(5, 5, 630, 32, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(5, 443, 630, 32, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(5, 5, 32, 455, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(603, 5, 32, 455, 0xFFFFFF).setOrigin(0,0);
-        
-        //green UI background
-        this.add.rectangle(37,42,566,64, 0x00FF00).setOrigin(0,0);
+        //boarder
+        this.add.rectangle(5, 443, 630, 32, 0x011726).setOrigin(0,0);
 
         //add the rocket - player1
-        this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setScale(.5, .5).setOrigin(0, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setOrigin(0, 0);
     
         //add spaceships
         this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0,0);
@@ -40,19 +35,24 @@ class Play extends Phaser.Scene {
         //animation config
         this.anims.create({
             key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 9, first: 0}),
+            frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 18, first: 0}),
             framerate: 30,
         });
 
         //score - intialized at 0pts
         this.p1Score = 0;
 
+        //NAVY rectangle border
+        this.add.rectangle(5, 5, 630, 32, 0x011726).setOrigin(0,0);
+        this.add.rectangle(5, 5, 32, 455, 0x011726).setOrigin(0,0);
+        this.add.rectangle(603, 5, 32, 455, 0x011726).setOrigin(0,0);
+
         //score display
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: "#843605",
+            backgroundColor: '#E92525',
+            color: "#000",
             align: 'right',
             padding: {top: 5, bottom: 5,},
             fixedWidth: 100
@@ -65,8 +65,9 @@ class Play extends Phaser.Scene {
         //60-sec playtime clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall (game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)IRE TO RESTART or <- for Menu', scoreConfig).setOrigin(0.5);
+            this.end1 = this.add.tileSprite(0, 0, 640, 480, 'end1').setOrigin(0,0);
+            this.final = this.add.text (160, 54, 'FINAL SCORE: ', scoreConfig);
+            this.scoreLeft = this.add.text(440, 54, this.p1Score, scoreConfig);
             this.gameOver = true;
         }, null, this);
     }

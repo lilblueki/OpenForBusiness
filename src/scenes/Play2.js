@@ -6,29 +6,25 @@ class Play2 extends Phaser.Scene {
 
     preload(){
         //load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.image('rocket', './modassets/burger1.png');
+        this.load.image('rocket2', './modassets/taco1.png');
+        this.load.image('spaceship', './modassets/eater.png');
+        this.load.image('starfield', './modassets/floorplan.png');
+        this.load.image('end', './modassets/endbg2.png');
+        this.load.spritesheet('explosion', './modassets/eating.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 18});
     }
 
     create(){
         //place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
-
-        //white rectangle border
-        this.add.rectangle(5, 5, 630, 32, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(5, 443, 630, 32, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(5, 5, 32, 455, 0xFFFFFF).setOrigin(0,0);
-        this.add.rectangle(603, 5, 32, 455, 0xFFFFFF).setOrigin(0,0);
         
-        //green UI background
-        this.add.rectangle(37,42,566,64, 0x00FF00).setOrigin(0,0);
-
+        //boarder
+        this.add.rectangle(5, 443, 630, 32, 0x011726).setOrigin(0,0);
+       
         //add the rocket - player1
-        this.p1Rocket = new Rocket1(this, game.config.width/2 + 150, 431, 'rocket').setScale(.5, .5).setOrigin(0, 0); //adjust location <------
+        this.p1Rocket = new Rocket1(this, game.config.width/2 + 150, 431, 'rocket').setOrigin(0, 0); //adjust location <------
         //add 2nd rocket - Multiplayer, Player2
-        this.p2Rocket = new Rocket2(this, game.config.width/2 - 150, 431, 'rocket').setScale(.5, .5).setOrigin(0, 0); //adjust location <------
+        this.p2Rocket = new Rocket2(this, game.config.width/2 - 150, 431, 'rocket2').setOrigin(0, 0); //adjust location <------
     
         //add spaceships
         this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0,0);
@@ -50,7 +46,7 @@ class Play2 extends Phaser.Scene {
         //animation config
         this.anims.create({
             key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 9, first: 0}),
+            frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 18, first: 0}),
             framerate: 30,
         });
 
@@ -59,12 +55,17 @@ class Play2 extends Phaser.Scene {
             //added
         this.p2Score = 0; //Player 2 score
 
+        //white rectangle border
+        this.add.rectangle(5, 5, 630, 32, 0x011726).setOrigin(0,0);
+        this.add.rectangle(5, 5, 32, 455, 0x011726).setOrigin(0,0);
+        this.add.rectangle(603, 5, 32, 455, 0x011726).setOrigin(0,0);
+
         //score display
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: "#843605",
+            backgroundColor: '#E92525',
+            color: "#000",
             align: 'right',
             padding: {top: 5, bottom: 5,},
             fixedWidth: 100
@@ -79,8 +80,9 @@ class Play2 extends Phaser.Scene {
         //60-sec playtime clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall (game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'PRESS (A) TO RESTART or <- FOR MENU', scoreConfig).setOrigin(0.5);
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'end').setOrigin(0,0);
+            this.scoreLeft = this.add.text(540, 54, this.p1Score, scoreConfig); //score display - Player 1
+            this.scoreRight = this.add.text(69, 54, this.p2Score, scoreConfig); //score display - Multiplayer, Player 2
             this.gameOver = true;
         }, null, this);
     }
@@ -88,7 +90,6 @@ class Play2 extends Phaser.Scene {
     update(){
         //check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyA)){
-            this.sound.play('sfx_select');
             this.scene.restart(this.p1Score);
             this.scene.restart(this.p2Score);
         }
