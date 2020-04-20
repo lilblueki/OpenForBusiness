@@ -11,7 +11,7 @@ class Play2 extends Phaser.Scene {
         this.load.image('spaceship', './modassets/eater.png');
         this.load.image('starfield', './modassets/floorplan.png');
         this.load.image('end', './modassets/endbg2.png');
-        this.load.spritesheet('explosion', './modassets/eating.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 18});
+        this.load.spritesheet('explosion', './modassets/eating2.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 18});
     }
 
     create(){
